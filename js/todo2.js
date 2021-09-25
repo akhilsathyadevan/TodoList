@@ -1,68 +1,77 @@
-function ajax(){
-    var xhttp=new XMLHttpRequest();
-    xhttp.onreadystatechange=function(){
-        
-        if(this.readyState==4&&this.status==200){
-            var response=JSON.parse(this.responseText);
-            var output="";
-            var completed="";
-            var incomplete="";
-            var count=0;
-            for(var i=0;i<=response.length;i++){
+function ajax() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var response = JSON.parse(this.responseText);
 
-                if(response[i].completed==true){
-                    output+="<tr>"+ 
-                "<td>"+"<input type='checkbox' id='chk' checked=true onclick='return false' disabled>"+"</td> "+"<td>"+ 
-                response[i].title +"</td>"+
-                "<td id='c'>"+response[i].completed+"</td>"
-                +"</tr>";
-
-                  
-                }
-                else if(response[i].completed==false){
-                    output+="<tr>"+ 
-                "<td class='cells'>"+"<input type='checkbox' id='chk' >"+"</td> "+"<td>"+ response[i].title +"</td>"+
-                "<td id='c'>"+response[i].completed+"</td>"
-                +"</tr>";
-                }
-                
-                document.getElementById("tbl").innerHTML=output;
-                var clist=[];
-                let count=0;
-                $(document).ready(()=>{
-                    $("cells").on("change",":checkbox",function(){
-                    var rowIndex=this.parentNode.rowIndex+1;
-                    const promise=new promise(function(resolve,reject){
-                        count=$(":checkbox:checked").length-90;
-                        $(":checkbox:checked")
-                         .parent()
-                         .parent()
-                        $(":checkbox:not(:checked)")
-                         .parent()
-                         .parent()
-                        clist+=rowIndex;
-                        if(count>=5){
-                            alert("congratulations!!");
-                            resolve();
-                        } 
-                    });
-                    promise.then(()=>{
-                        alert("congratulations successfully completed 5 tasks");
-
-                    });
-                 });
-                });
-
-            }
-           
+      var todo = response;
+      console.log(todo);
+      var output = "";
+      var taskcomp = "";
+      var taskuncomp = "";
+      output += `<tr>`;
+      output += `<th>  </th>`;
+      output += `<th> Title </th>`;
+      output += `<tr>`;
+      for (var i = 0; i < todo.length; i++) {
+        if (todo[i].completed == true) {
+          output += `<tr class="table-danger"  >`;
+          output += `<td><input type="checkbox" checked=true onclick="return false"></td>`;
+          output += `<td style="text-decoration:line-through"> ${todo[i].title} </td>`;
+          output += `</tr>`;
+        } else if (todo[i].completed == false) {
+          output += `</tr>`;
+          output += `<td class="cells"><input type="checkbox" class="check"></td>`;
+          output += `<td> ${todo[i].title} </td>`;
+          output += `</tr>`;
         }
-    }
-    xhttp.open("GET","https://jsonplaceholder.typicode.com/todos",true);
-    xhttp.send();
-}
 
-function one(){
-    var a= document.forms["main"];
-    var x=a.querySelectorAll('input[type="checkbox"]:checked');
-    alert(x.length);
+        if (todo[i].completed == true) {
+          taskcomp += `<tr style="background-color: peachpuff;">`;
+          taskcomp += `<td><input type="checkbox" checked=true onclick="return false"></td>`;
+          taskcomp += `<td> ${todo[i].title} </td>`;
+          taskcomp += `</tr>`;
+        }
+
+        if (response[i].completed == false) {
+          taskuncomp += `<tr>`;
+          taskuncomp += `<td class="cellsuncomp"><input type="checkbox" class="checks"></td>`;
+          taskuncomp += `<td> ${todo[i].title} </td>`;
+          taskuncomp += `</tr>`;
+        }
+      }
+      document.getElementById("tbl").append(output);
+      document.getElementById("tbl").innerHTML = output;
+      document.getElementById("tbl").style.border = "2px solid black";
+
+      var checkedlist = [];
+      let counter = 0;
+      $(document).ready(() => {
+        $(".cells").on("change", ":checkbox", function () {
+          var rowIndex = this.parentNode.rowIndex + 1;
+          const promise = new Promise(function (resolve, reject) {
+            counter = $(":checkbox:checked").length - 90;
+            $(":checkbox:checked")
+              .parent()
+              .parent()
+              .css("text-decoration", "line-through");
+            $(":checkbox:not(:checked)")
+              .parent()
+              .parent()
+              .css("text-decoration", "none");
+            checkedlist += rowIndex;
+            if (counter >= 5) {
+              alert("Congratulations!!");
+              resolve();
+            }
+          });
+          promise.then(()=>{
+            alert("Congrats. 5 Tasks have been Successfully Completed");
+          });
+        });
+      });
+    }
+  };
+  xhttp.open("GET", "https://jsonplaceholder.typicode.com/todos", true);
+  xhttp.send();
 }
