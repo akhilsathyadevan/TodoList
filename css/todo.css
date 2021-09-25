@@ -1,0 +1,10 @@
+
+
+.table-container table{
+    width: 900px !important;
+}
+.table td{
+    background-color: blue !important;
+    color: whitesmoke;
+    font-family: sans-serif;
+}
